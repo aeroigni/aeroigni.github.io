@@ -55,7 +55,7 @@ to zrealizuje opisany wczesniej pomysł, zwracając pewną możliwą do zbadania
 
 Najpierw pobieramy plik
 
-[aeroigni@raxxla ~]$ wget https://eddb.io/archive/v6/systems.csv
+<w>[aeroigni@raxxla ~]$</w> wget https://eddb.io/archive/v6/systems.csv
 --2021-03-30 01:17:07--  https://eddb.io/archive/v6/systems.csv
 Załadowano certyfikat CA '/etc/ssl/certs/ca-certificates.crt'
 Translacja eddb.io (eddb.io)... 95.217.226.126, 2a01:4f9:4b:4a41::2
@@ -66,7 +66,7 @@ Zapis do: `Pobrane/systems.csv'
 
 ...
 
-aeroigni@raxxla ~]$ ls -lah Pobrane/
+<w>aeroigni@raxxla ~]$</w> ls -lah Pobrane/
 razem 5,9G
 drwxr-xr-x  2 aeroigni aeroigni 4,0K 03-30 00:00 .
 drwx------ 18 aeroigni aeroigni 4,0K 03-30 00:39 ..
@@ -86,7 +86,7 @@ Poniżej kod źródłowy programu, który napisałem.
 W celu znalezienia dopasowań użyjemy wyrażeń regularnych oraz biblioteki pandas (do obsługi arkuszy kalkulacyjnych csv)
 Bibliotekę należy dociągnąć za pomocą polecenia `pip3 install pandas` 
 
-[aeroigni@raxxla ~]$ cat raxxla.py 
+<w>[aeroigni@raxxla ~]$</w> cat raxxla.py 
 
 #!/usr/bin/env python
 
@@ -111,7 +111,7 @@ for system in matches:
         print(system)
 
 
-[aeroigni@raxxla ~]$ python3 raxxla.py 
+<w>[aeroigni@raxxla ~]$</w> python3 raxxla.py 
 Alphard
 Al'farg
 Alacarakmo
@@ -139,7 +139,7 @@ Po wykonaniu skrypt zwrócił w/w listę lokacji.
 Przy obecnym maksymalnym zasięgu skoku mojego DBX Explorera wynoszącym 57 LY, Universal Cartographics wyznacza trasy o następujących długościach:
 
 (ten wynik podaję referencyjnie - Sol 111 LY od Leesti)
-Alphard 161 LY
+<w>Alphard 161 LY
 Al'farg 455 LY
 Alacarakmo 199 LY
 Alanaribri 230 LY
@@ -155,7 +155,7 @@ Kalasar 156 LY
 Kalumar 116 LY
 Kaurawalaga 77 LY
 Mal Yarr 191 LY
-Yuragala 179 LY
+Yuragala 179 LY</w>
 
 Oczywiście wszystkie odegłości mierzone są od Leesti (to tam padło hasło Raxxla). 
 Są to odległości jak najbardziej możliwe do pokonania w czasach akcji opowiadania.
