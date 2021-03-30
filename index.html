@@ -40,17 +40,17 @@ Jestem <w>CMDR Aeroigni</w>, a oto moje wysiłki na rzecz odkrycia czym jest <w>
 
 Po pierwsze pomysł, po drugie metody, po trzecie środki. 
 
-Po lekturze ośmiu rozdziałów <w>Elite: The Dark Wheel</w> Roberta Holdstocka (http://www.iancgbell.clara.net/elite/dkwheel.htm)
-za punkt wyjściowy poszukiwań obrałem Leesti. Leesti jest planetą w pobliżu której pirat/zabójca zaatakował statek o nazwie 
-Avalon głównego bohatera opowiadania (Alex). Pirat został wynajęty przez Dark Wheel w celu usunięcia ojca Alexa, niewgodnego 
+Po lekturze ośmiu rozdziałów <a href="http://www.iancgbell.clara.net/elite/dkwheel.htm">Elite: The Dark Wheel</a> Roberta Holdstocka 
+za punkt wyjściowy poszukiwań obrałem <w>Leesti</w>. Leesti jest planetą w pobliżu której pirat/zabójca zaatakował statek o nazwie 
+Avalon głównego bohatera opowiadania (Alex). Pirat został wynajęty przez <w>Dark Wheel</w> w celu usunięcia ojca Alexa, niewgodnego 
 świadka który wiedział zbyt wiele o Raxxla! Ale czym jest mityczna Raxxla?
 Założyłem, że Raxxla to zaszyfrowany fragment nazwy układu, a xx to dowolne dwa znaki (być może jednym ze znaków jest spacja?). 
 Możliwe, że nazwa została napisana wspak, celem utrudnienia odkrycia. 
-Zatem szukamy wszystkich planet zaczynających się (lub kończących) dowolnym ciągiem znaków oraz zawierających (...)ra??la(...)
-lub wspak (...)al??ar(...) ,gdzie ?? oznacza dowolne dwa znaki alfabetu, małe i wielkie litery, lub jedną spację.
+Zatem szukamy wszystkich planet zaczynających się (lub kończących) dowolnym ciągiem znaków oraz zawierających (...)<w>ra</w>??<w>la</w>(...)
+lub wspak (...)<w>al</w>??<w>ar</w>(...) ,gdzie ?? oznacza dowolne dwa znaki alfabetu, małe i wielkie litery, lub jedną spację.
 Ponieważ próba znalezienia planet spełniających kryteria w Universal Cartographics skazana jest na niepowodzenie (ze względu na 
-gigantyczną liczbę możliwych systemów) postanowiłem wykorzystać ogromną bazę danych dostępną pod adresem https://eddb.io/api
-Ze wspomnianej strony pobrałem plik systems.csv ważący prawie 6GB ;] oraz napisałem skrypt w języku programowania Python, który 
+gigantyczną liczbę możliwych systemów) postanowiłem wykorzystać ogromną bazę danych dostępną pod adresem <a href="https://eddb.io/api">https://eddb.io/api</a>
+Ze wspomnianej strony pobrałem plik <w>systems.csv</w> ważący prawie 6GB ;] oraz napisałem skrypt w języku programowania <w>Python</w>, który 
 to zrealizuje opisany wczesniej pomysł, zwracając pewną możliwą do zbadania liczbę systemów. Zobaczmy co z tego wyniknie...
 
 Najpierw pobieramy plik
@@ -74,13 +74,13 @@ drwx------ 18 aeroigni aeroigni 4,0K 03-30 00:39 ..
 
 ...
 
-Jak widać plik systems.csv zajmuje 5,9GB, więc nie polecam otwierania w arkuszu kalkulacyjnym ;]
+Jak widać plik <w>systems.csv</w> zajmuje <w>5,9GB</w>, więc nie polecam otwierania w arkuszu kalkulacyjnym ;]
 W nagłówku pliku możemy zobaczyć jego strukturę. Wyświetlimy więc jego pierwsze aby wiedziec jak się dobrać do tych informacji
 
 [aeroigni@raxxla ~]$ head -n 3 systems.csv 
-id,edsm_id,name,x,y,z,population,is_populated,government_id,government,allegiance_id,allegiance,security_id,security,primary_economy_id,primary_economy,power,power_state,power_state_id,needs_permit,updated_at,minor_factions_updated_at,simbad_ref,controlling_minor_faction_id,controlling_minor_faction,reserve_type_id,reserve_type,ed_system_address
-17,60,"10 Ursae Majoris",0.03125,34.90625,-39.09375,0,0,176,None,5,None,64,Anarchy,10,None,,,,0,1616982141,1616982141,"10 Ursae Majoris",,,3,Common,2415659059555
-24,12009,"11 Bootis",-49.40625,285.25,65.21875,0,0,176,None,5,None,64,Anarchy,10,None,,,,0,1614127004,1614127004,"11 Bootis",,,1,Pristine,35670467772
+id,edsm_id,<w>name</w>,x,y,z,population,is_populated,government_id,government,allegiance_id,allegiance,security_id,security,primary_economy_id,primary_economy,power,power_state,power_state_id,needs_permit,updated_at,minor_factions_updated_at,simbad_ref,controlling_minor_faction_id,controlling_minor_faction,reserve_type_id,reserve_type,ed_system_address
+17,60,<w>"10 Ursae Majoris"</w>,0.03125,34.90625,-39.09375,0,0,176,None,5,None,64,Anarchy,10,None,,,,0,1616982141,1616982141,"10 Ursae Majoris",,,3,Common,2415659059555
+24,12009,<w>"11 Bootis"</w>,-49.40625,285.25,65.21875,0,0,176,None,5,None,64,Anarchy,10,None,,,,0,1614127004,1614127004,"11 Bootis",,,1,Pristine,35670467772
 
 Zatem w trzeciej kolumnie arkusza są interesujące nas nazwy systemów
 Poniżej kod źródłowy programu, który napisałem.
@@ -102,7 +102,7 @@ def hasNumbers(inputString):
 col_name = ["name"]
 df = pandas.read_csv("Pobrane/systems.csv", usecols=col_name)
 systems_list = df["name"].tolist()
-regex = re.compile(r'(?:.*<w>al</w>..<w>ar</w>.*)|(?:.*<w>ra</w>..<w>la</w>.*)')
+regex = re.compile(r'(?:.*al..ar.*)|(?:.*ra..la.*)')
 matches = [
     string for string in systems_list if re.match(
         regex,
