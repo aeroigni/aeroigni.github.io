@@ -1,9 +1,8 @@
-
 <!doctype html>
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <title>CTFLearn959CodeGolf</title>
+  <title>To The Raxxla!</title>
   <meta name="description" content="To The Raxxla!">
   <meta name="author" content="Aeroigni">
   <link rel="stylesheet" href="styles.css">
@@ -37,6 +36,141 @@ Dnia 30 Mar roku galaktycznego 3307
 
 
 Cześć.
+Jestem CMDR Aeroigni, a oto moje wysiłki na rzecz odkrycia czym jest Raxxla.
+
+Po pierwsze pomysł, po drugie metody, po trzecie środki. 
+
+Po lekturze ośmiu rozdziałów Elite: The Dark Wheel Roberta Holdstocka (http://www.iancgbell.clara.net/elite/dkwheel.htm)
+za punkt wyjściowy poszukiwań obrałem Leesti. Leesti jest planetą w pobliżu której pirat/zabójca zaatakował statek o nazwie 
+Avalon głównego bohatera opowiadania (Alex). Pirat został wynajęty przez Dark Wheel w celu usunięcia ojca Alexa, niewgodnego 
+świadka który wiedział zbyt wiele o Raxxla! Ale czym jest mityczna Raxxla?
+Założyłem, że Raxxla to zaszyfrowany fragment nazwy układu, a xx to dowolne dwa znaki (być może jednym ze znaków jest spacja?). 
+Możliwe, że nazwa została napisana wspak, celem utrudnienia odkrycia. 
+Zatem szukamy wszystkich planet zaczynających się (lub kończących) dowolnym ciągiem znaków oraz zawierających (...)ra??la(...)
+lub wspak (...)al??ar(...) ,gdzie ?? oznacza dowolne dwa znaki alfabetu, małe i wielkie litery, lub jedną spację.
+Ponieważ próba znalezienia planet spełniających kryteria w Universal Cartographics skazana jest na niepowodzenie (ze względu na 
+gigantyczną liczbę możliwych systemów) postanowiłem wykorzystać ogromną bazę danych dostępną pod adresem https://eddb.io/api
+Ze wspomnianej strony pobrałem plik systems.csv ważący prawie 6GB ;] oraz napisałem skrypt w języku programowania Python, który 
+to zrealizuje opisany wczesniej pomysł, zwracając pewną możliwą do zbadania liczbę systemów. Zobaczmy co z tego wyniknie...
+
+Najpierw pobieramy plik
+
+[aeroigni@raxxla ~]$ wget https://eddb.io/archive/v6/systems.csv
+--2021-03-30 01:17:07--  https://eddb.io/archive/v6/systems.csv
+Załadowano certyfikat CA '/etc/ssl/certs/ca-certificates.crt'
+Translacja eddb.io (eddb.io)... 95.217.226.126, 2a01:4f9:4b:4a41::2
+Łączenie się z eddb.io (eddb.io)|95.217.226.126|:443... połączono.
+Żądanie HTTP wysłano, oczekiwanie na odpowiedź... 200 OK
+Długość: 6262763641 (5,8G) [text/csv]
+Zapis do: `Pobrane/systems.csv'
+
+...
+
+aeroigni@raxxla ~]$ ls -lah Pobrane/
+razem 5,9G
+drwxr-xr-x  2 aeroigni aeroigni 4,0K 03-30 00:00 .
+drwx------ 18 aeroigni aeroigni 4,0K 03-30 00:39 ..
+-rw-r--r--  1 aeroigni aeroigni 5,9G 03-30 00:00 systems.csv
+
+...
+Jak widać plik systems.csv zajmuje 5,9GB, więc nie polecam otwierania w arkuszu kalkulacyjnym ;]
+W nagłówku pliku możemy zobaczyć jego strukturę. Wyświetlimy więc jego pierwsze aby wiedziec jak się dobrać do tych informacji
+
+[aeroigni@raxxla ~]$ head -n 3 systems.csv 
+id,edsm_id,name,x,y,z,population,is_populated,government_id,government,allegiance_id,allegiance,security_id,security,primary_economy_id,primary_economy,power,power_state,power_state_id,needs_permit,updated_at,minor_factions_updated_at,simbad_ref,controlling_minor_faction_id,controlling_minor_faction,reserve_type_id,reserve_type,ed_system_address
+17,60,"10 Ursae Majoris",0.03125,34.90625,-39.09375,0,0,176,None,5,None,64,Anarchy,10,None,,,,0,1616982141,1616982141,"10 Ursae Majoris",,,3,Common,2415659059555
+24,12009,"11 Bootis",-49.40625,285.25,65.21875,0,0,176,None,5,None,64,Anarchy,10,None,,,,0,1614127004,1614127004,"11 Bootis",,,1,Pristine,35670467772
+
+Zatem w trzeciej kolumnie arkusza są interesujące nas nazwy systemów
+Poniżej kod źródłowy programu, który napisałem.
+W celu znalezienia dopasowań użyjemy wyrażeń regularnych oraz biblioteki pandas (do obsługi arkuszy kalkulacyjnych csv)
+Bibliotekę należy dociągnąć za pomocą polecenia `pip3 install pandas` 
+
+[aeroigni@raxxla ~]$ cat raxxla.py 
+
+#!/usr/bin/env python
+
+import re
+import pandas
+
+
+def hasNumbers(inputString):
+    return any(char.isdigit() for char in inputString)
+
+
+col_name = ["name"]
+df = pandas.read_csv("Pobrane/systems.csv", usecols=col_name)
+systems_list = df["name"].tolist()
+regex = re.compile(r'(?:.*al..ar.*)|(?:.*ra..la.*)')
+matches = [
+    string for string in systems_list if re.match(
+        regex,
+        string.lower())]
+for system in matches:
+    if not hasNumbers(system):
+        print(system)
+
+
+[aeroigni@raxxla ~]$ python3 raxxla.py 
+Alphard
+Al'farg
+Alacarakmo
+Alanaribri
+Alicarl
+Arabela
+Aurawala
+Branglal
+Calamari
+Dalevard
+Djalibara
+Draualang
+Kalasar
+Kalumar
+Kaurawalaga
+Mal Yarr
+Yuragala
+
+
+```
+
+Mhuaa, mhuaa, voila ;]
+Po wykonaniu skrypt zwrócił w/w listę lokacji.
+
+Przy obecnym maksymalnym zasięgu skoku mojego DBX Explorera wynoszącym 57 LY, Universal Cartographics wyznacza trasy o następujących długościach:
+
+(ten wynik podaję referencyjnie - Sol 111 LY od Leesti)
+Alphard 161 LY
+Al'farg 455 LY
+Alacarakmo 199 LY
+Alanaribri 230 LY
+Alicarl 89 LY
+Arabela 137 LY
+Aurawala 171 LY
+Branglal 156 LY
+Calamari 98 LY
+Dalevard 178 LY
+Djalibara 164 LY
+Draualang 109 LY
+Kalasar 156 LY
+Kalumar 116 LY
+Kaurawalaga 77 LY
+Mal Yarr 191 LY
+Yuragala 179 LY
+
+Oczywiście wszystkie odegłości mierzone są od Leesti (to tam padło hasło Raxxla). 
+Są to odległości jak najbardziej możliwe do pokonania w czasach akcji opowiadania.
+Mamy zatem 17 kandydatów do miana Raxxla! ;]
+
+Samo się nie odkryje...
+
+Dzień pierwszy 30 Mar 3307 UGT
+...
+
+
+
+
+
+
 
 
 &copy; Zamieszczone kody źródłowe objęte są licencją <b><a href="https://pl.wikipedia.org/wiki/Licencje_BSD">BSD</a></b> w wersji 2.
